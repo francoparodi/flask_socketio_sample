@@ -1,16 +1,30 @@
 # Flask SocketIO Sample
 
 ## Getting Started
+A sample socketIO with Flask, using Application Factory.
 
 ### Prerequisites
 
 ### Installing
 
-## Running the tests
+## Running
+
+__as app__
+
+```sh
+export FLASK_APP=flaskr
+flask run
+```
+
+__as wsgi server__
+
+```sh
+gunicorn --worker-class eventlet -w 1 -b localhost:8080 wsgi
+```
 
 ## Deployment
 
-gunicorn --worker-class eventlet -w 1 wsgi -b:8080
+As seen above (gunicorn...)
 
 ## Authors 
 
