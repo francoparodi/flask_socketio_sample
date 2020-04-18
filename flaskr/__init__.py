@@ -1,16 +1,13 @@
-from datetime import datetime
 from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+def create_app():
+    app = Flask(__name__, instance_relative_config=True)
+    app.config['SECRET_KEY'] = 'secret!'
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+    from flaskr.routes import socketio
+    socketio.init_app(app)
 
-@socketio.on('dataToServer')
-def on_dataToServer(data):
-    field1=data['field1']
-    emit('dataFromServer', {'datetime': str(datetime.now()), 'field1': field1})
+    from flaskr.routes import view
+    app.register_blueprint(view)
+
+    return app
