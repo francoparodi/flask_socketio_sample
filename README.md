@@ -10,6 +10,8 @@
 
 ## Deployment
 
+gunicorn --worker-class eventlet -w 1 wsgi -b:8080
+
 ## Authors 
 
 ## License
