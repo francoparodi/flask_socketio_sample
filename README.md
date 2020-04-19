@@ -2,6 +2,7 @@
 
 ## Getting Started
 A sample socketIO with Flask, using Application Factory.
+Sample shows the use of a single thread as daemon to send data to client.
 
 ### Prerequisites
 
