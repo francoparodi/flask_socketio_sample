@@ -20,7 +20,7 @@ flask run
 __as wsgi server__
 
 ```sh
-gunicorn --worker-class eventlet -w 1 -b localhost:8080 wsgi
+gunicorn --worker-class eventlet -w 4 -b localhost:8080 wsgi
 ```
 
 ## Deployment

@@ -1,7 +1,7 @@
 from datetime import datetime
 import threading, time
 from flask import current_app as app
-from flask import Blueprint, render_template, copy_current_request_context
+from flask import Blueprint, render_template, copy_current_request_context, request
 
 from flask_socketio import SocketIO, emit
 
@@ -19,18 +19,26 @@ def homepage():
 
 @socketio.on('dataToServer')
 def on_dataToServer(data):
+    broadcasting=data['broadcasting']
     field1=data['field1']
-    emit('dataFromServer', {'datetime': str(datetime.now()), 'field1': field1})
+    requestSid=request.sid
+    if (broadcasting == 'True'):
+        print('Broadcasting {0}'.format(broadcasting))
+        socketio.emit('dataFromServer', {'datetime': str(datetime.now()), 'field1': field1, 'requestSid': requestSid}, broadcast='True')
+    else :
+        print('Broadcasting {0}'.format(broadcasting))
+        socketio.emit('dataFromServer', {'datetime': str(datetime.now()), 'field1': field1, 'requestSid': requestSid}, broadcast='False')
 
 @socketio.on('handleDaemon')
 def on_handleDaemon(data):
     name=data['name']
     action=data['action']
+    requestSid=request.sid
 
     @copy_current_request_context
     def daemonProcess(name, action, stop_event):
         while not stop_event.is_set():
-            emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'action': action})
+            socketio.emit('daemonProcess', {'datetime': str(datetime.now()), 'name': name, 'action': action, 'requestSid': requestSid} )
             time.sleep(1)
 
     global isDaemonStarted

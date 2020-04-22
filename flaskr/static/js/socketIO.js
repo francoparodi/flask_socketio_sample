@@ -1,29 +1,31 @@
+//import { uuid4 } from "./utils";
+
 var socket;
 
 function socketIOinit() {
 
-    console.log('Document domain:' + document.domain + ':' + location.port)
+    console.log(`Document domain: ${document.domain}:${location.port}`)
     socket = io.connect('http://' + document.domain + ':' + location.port);
 
     socket.on('connect', function() {
-        console.log('Websocket connected!');
+        console.log('Websocket connected');
     });
 
     socket.on('dataFromServer', function(data) {
         var jStr = JSON.stringify(data);
         var jObj = JSON.parse(jStr);
-        console.log(jObj.datetime + ' ' +jObj.field1);
+        console.log(jObj.datetime + ' ' + jObj.field1 + ' ' + jObj.requestSid);
         var oldData = document.getElementById("contentFromServer").value;
-        var newData = '(' + jObj.datetime + ') received: ' + jObj.field1;
+        var newData = '(' + jObj.datetime + ') received: ' + jObj.field1 + ' ' + jObj.requestSid;
         document.getElementById("contentFromServer").innerHTML = newData + '\n' + oldData; 
     });
 
     socket.on('daemonProcess', function(data) {
         var jStr = JSON.stringify(data);
         var jObj = JSON.parse(jStr);
-        console.log(jObj.datetime + ' ' + jObj.name + ' ' + jObj.action);
+        console.log(jObj.datetime + ' ' + jObj.name + ' ' + jObj.action + ' ' + jObj.dateMs + ' ' + jObj.requestSid);
         var oldData = document.getElementById("contentFromServer").value;
-        var newData = '(' + jObj.datetime + ') received: ' + jObj.name + ' ' + jObj.action;
+        var newData = '(' + jObj.datetime + ') received: ' + jObj.name + ' ' + jObj.action + ' ' + jObj.requestSid;
         document.getElementById("contentFromServer").innerHTML = newData + '\n' + oldData; 
     });
 }
@@ -33,9 +35,9 @@ function clearData() {
     document.getElementById("contentFromServer").innerHTML = empty;
 }
    
-function dataToServer() {
+function dataToServer(broadcasting) {
     var data = document.getElementById("contentToServer").value;
-    socket.emit('dataToServer', {field1: data});
+    socket.emit('dataToServer', {broadcasting: broadcasting, field1: data});
 }
 
 function startDaemon() {
