@@ -1,12 +1,11 @@
 from datetime import datetime
 import threading, time
 from flask import current_app as app
-from flask import Blueprint, render_template, copy_current_request_context, request
+from flask import Blueprint, render_template, copy_current_request_context, request, session
 
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 
 socketio = SocketIO()
-
 stop_event = threading.Event()
 daemon = threading.Thread()
 isDaemonStarted = False
@@ -19,15 +18,9 @@ def homepage():
 
 @socketio.on('dataToServer')
 def on_dataToServer(data):
-    broadcasting=data['broadcasting']
-    field1=data['field1']
-    requestSid=request.sid
-    if (broadcasting == 'True'):
-        print('Broadcasting {0}'.format(broadcasting))
-        socketio.emit('dataFromServer', {'datetime': str(datetime.now()), 'field1': field1, 'requestSid': requestSid}, broadcast='True')
-    else :
-        print('Broadcasting {0}'.format(broadcasting))
-        socketio.emit('dataFromServer', {'datetime': str(datetime.now()), 'field1': field1, 'requestSid': requestSid}, broadcast='False')
+    field1 = data['field1']
+    requestSid = request.sid
+    socketio.emit('dataFromServer', {'datetime': str(datetime.now()), 'field1': field1, 'requestSid': requestSid})
 
 @socketio.on('handleDaemon')
 def on_handleDaemon(data):

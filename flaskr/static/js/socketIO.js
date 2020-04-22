@@ -1,10 +1,11 @@
 //import { uuid4 } from "./utils";
 
 var socket;
+var dateMs = Date.now()
 
 function socketIOinit() {
 
-    console.log(`Document domain: ${document.domain}:${location.port}`)
+    console.log(`Document domain: ${document.domain}:${location.port} date in ms.: ${dateMs}`)
     socket = io.connect('http://' + document.domain + ':' + location.port);
 
     socket.on('connect', function() {
@@ -35,9 +36,9 @@ function clearData() {
     document.getElementById("contentFromServer").innerHTML = empty;
 }
    
-function dataToServer(broadcasting) {
+function dataToServer() {
     var data = document.getElementById("contentToServer").value;
-    socket.emit('dataToServer', {broadcasting: broadcasting, field1: data});
+    socket.emit('dataToServer', {field1: data});
 }
 
 function startDaemon() {
