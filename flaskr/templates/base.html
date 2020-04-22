@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
@@ -13,11 +13,11 @@
     <!-- DARK MODE -->
     <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.css">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='flask_socketio_sample.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flask_socketio_sample.css') }}">
 
     <title>Flask SocketIO Sample</title>
 </head>
-<body>
+<body onload="socketIOinit();">
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -29,55 +29,12 @@
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 
-    <script type="text/javascript" charset="utf-8">
-
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-        socket.on('connect', function() {
-            console.log('Websocket connected!');
-        });
-
-        socket.on('dataFromServer', function(data) {
-            var jStr = JSON.stringify(data);
-            var jObj = JSON.parse(jStr);
-            console.log(jObj.datetime + ' ' +jObj.field1);
-            var oldData = document.getElementById("contentFromServer").value;
-            var newData = '(' + jObj.datetime + ') received: ' + jObj.field1;
-            document.getElementById("contentFromServer").innerHTML = newData + '\n' + oldData; 
-        });
-
-        socket.on('daemonProcess', function(data) {
-            var jStr = JSON.stringify(data);
-            var jObj = JSON.parse(jStr);
-            console.log(jObj.datetime + ' ' + jObj.name + ' ' + jObj.action);
-            var oldData = document.getElementById("contentFromServer").value;
-            var newData = '(' + jObj.datetime + ') received: ' + jObj.name + ' ' + jObj.action;
-            document.getElementById("contentFromServer").innerHTML = newData + '\n' + oldData; 
-        });
-
-        function clearData() {
-            var empty = "";
-            document.getElementById("contentFromServer").innerHTML = empty;
-        }
-
-        function dataToServer() {
-            var data = document.getElementById("contentToServer").value;
-            socket.emit('dataToServer', {field1: data});
-        }
-
-        function startDaemon() {
-            socket.emit('handleDaemon', {name: '1', action: 'START'});
-        }
-
-        function stopDaemon() {
-            socket.emit('handleDaemon', {name: '1', action: 'STOP'});
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/socketIO.js') }}"></script>
 
     <nav class="navbar navbar-expand-lg">
 
         <a class="navbar-brand" href="{{ url_for('view.homepage') }}" data-toggle="tooltip" title="Home">
-            <img src="{{ url_for('static', filename='logo.png') }}" class="img-fluid" alt="Responsive image">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" class="img-fluid" alt="Responsive image">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
